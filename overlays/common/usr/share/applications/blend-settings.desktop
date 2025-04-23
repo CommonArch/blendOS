@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Containers
+Exec=blend-settings %U
+Terminal=false
+Type=Application
+Icon=blend-settings
+StartupWMClass=blend-settings
+Comment=Container support
+Keywords=Settings;
+Categories=System;

@@ -1,3 +1,3 @@
-# CommonArch Workstation
+# blendOS - CommonArch
 
-The pinnacle of Linux desktop computing. Your atomic, cloud-native Arch Linux desktop. Inspired by Project Bluefin.
+blendOS, but with CommonArch as the base system.

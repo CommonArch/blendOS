@@ -19,12 +19,14 @@ jobs:
       fail-fast: false
       max-parallel: 5
       matrix:
-        variant: [general, nvidia]
+        variant: [general, nvidia, waydroid, nvidia-waydroid]
         desktop: [gnome, plasma]
         include:
           - variant: general
             suffix: ''
           - variant: nvidia
+            suffix: '-nvidia'
+          - variant: nvidia-waydroid
             suffix: '-nvidia'
     steps:
       # Checkout push-to-registry action GitHub repository
@@ -35,7 +37,7 @@ jobs:
         run: |
           REPO_OWNER_LOWERCASE="$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
           echo "REPO_OWNER_LOWERCASE=$REPO_OWNER_LOWERCASE" >> "$GITHUB_ENV"
-          echo "IMAGE_NAME=ghcr.io/$REPO_OWNER_LOWERCASE/${{ github.event.repository.name }}${{ matrix.suffix }}-${{ matrix.desktop }}" >> "$GITHUB_ENV"
+          echo "IMAGE_NAME=ghcr.io/$REPO_OWNER_LOWERCASE/${{ github.event.repository.name }}-${{ matrix.desktop }}-${{ matrix.variant }}" >> "$GITHUB_ENV"
 
       - name: Docker meta
         id: docker_meta
@@ -64,12 +66,13 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max,ignore-error=true
+          cache-from: type=registry,ref=${{ env. IMAGE_NAME }}:${{ github.ref_name == 'dev' && 'dev' || 'main' }}
+          cache-to: type=inline,mode=min
           platforms: linux/amd64
           build-args: |
             CORE_BRANCH=${{ github.ref_name == 'dev' && 'dev' || 'main' }}
             VARIANT=${{ matrix.variant }}
             SUFFIX=${{ matrix.suffix }}
             DESKTOP=${{ matrix.desktop }}
+            RUN_ID=${{ github.run_id }}-${{ github.run_number }}
           provenance: false
