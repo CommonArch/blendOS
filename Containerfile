@@ -17,7 +17,7 @@ Server = https://pkg-repo.blendos.co
 EOT
 EOF
 
-RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; fi
+RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; yes | pacman -Scc; fi
 
 RUN <<EOF
 if [ "$DESKTOP" = gnome ]; then
