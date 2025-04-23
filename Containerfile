@@ -17,8 +17,6 @@ Server = https://pkg-repo.blendos.co
 EOT
 EOF
 
-RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; yes | pacman -Scc; fi
-
 RUN <<EOF
 if [ "$DESKTOP" = gnome ]; then
     pacman -Rcns --noconfirm gnome-console gnome-tour
@@ -64,6 +62,8 @@ EOF
 
 # Rebuild every layer hereon
 ARG RUN_ID=1
+
+RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; yes | pacman -Scc; fi
 
 RUN install-packages-build openssh curl wget git blend blend-settings blendos-wallpapers
 
