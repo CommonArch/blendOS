@@ -15,13 +15,13 @@ cat >>/etc/pacman.conf <<EOT
 
 [breakfast]
 SigLevel = Never
-Server = https://pkg-repo.blendos.co/archive/2025-04-23-21-49-17/
+Server = https://pkg-repo.blendos.co/archive/2025-04-23-23-10-17/
 EOT
 EOF
 
 RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; yes | pacman -Scc; fi
 
-RUN install-packages-build openssh curl wget git blend blend-settings blendos-wallpapers; yes | pacman -Scc
+RUN install-packages-build openssh curl wget git blend blend-settings blendos-wallpapers ptyxis; yes | pacman -Scc
 
 RUN systemctl --global enable blend-files
 
@@ -43,8 +43,6 @@ elif [ "$DESKTOP" = plasma ]; then
     install-packages-build spectacle
 fi
 
-glib-compile-schemas /usr/share/glib-2.0/schemas || true
-
 rm -f /usr/share/applications/stoken-gui.desktop
 rm -f /usr/share/applications/stoken-gui-small.desktop
 rm -f /usr/share/applications/qvidcap.desktop
@@ -54,6 +52,7 @@ rm -f /usr/share/applications/electron*.desktop
 rm -f /usr/share/applications/avahi-discover.desktop
 rm -f /usr/share/applications/bssh.desktop
 rm -f /usr/share/applications/Waydroid.desktop
+rm -f /usr/share/applications/waydroid*.desktop
 
 gtk-update-icon-cache
 
@@ -73,5 +72,7 @@ yes | pacman -Scc
 EOF
 
 COPY overlays/common overlay[s]/${DESKTOP} /
+
+RUN glib-compile-schemas /usr/share/glib-2.0/schemas || true
 
 RUN rm -f /.gitkeep
