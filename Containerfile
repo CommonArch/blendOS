@@ -8,14 +8,24 @@ ARG CORE_BRANCH=main
 ARG VARIANT=general
 ARG DESKTOP=nogui
 
+# Include blendOS packages
+
 RUN <<EOF
 cat >>/etc/pacman.conf <<EOT
 
 [breakfast]
 SigLevel = Never
-Server = https://pkg-repo.blendos.co
+Server = https://pkg-repo.blendos.co/archive/2025-04-23-21-49-17/
 EOT
 EOF
+
+RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; yes | pacman -Scc; fi
+
+RUN install-packages-build openssh curl wget git blend blend-settings blendos-wallpapers; yes | pacman -Scc
+
+RUN systemctl --global enable blend-files
+
+# DE tweaks
 
 RUN <<EOF
 if [ "$DESKTOP" = gnome ]; then
@@ -58,18 +68,10 @@ if [ "$VARIANT" = nvidia ]; then
 
     systemctl enable nvidia-suspend nvidia-hibernate nvidia-resume
 fi
+
+yes | pacman -Scc
 EOF
-
-# Rebuild every layer hereon
-ARG RUN_ID=1
-
-RUN if [ "$VARIANT" = 'waydroid' ] || [ "$VARIANT" = 'nvidia-waydroid' ]; then install-packages-build waydroid waydroid-image; yes | pacman -Scc; fi
-
-RUN install-packages-build openssh curl wget git blend blend-settings blendos-wallpapers
-
-RUN systemctl --global enable blend-files
 
 COPY overlays/common overlay[s]/${DESKTOP} /
 
 RUN rm -f /.gitkeep
-RUN yes | pacman -Scc

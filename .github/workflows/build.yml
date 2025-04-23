@@ -74,5 +74,4 @@ jobs:
             VARIANT=${{ matrix.variant }}
             SUFFIX=${{ matrix.suffix }}
             DESKTOP=${{ matrix.desktop }}
-            RUN_ID=${{ github.run_id }}-${{ github.run_number }}
           provenance: false
