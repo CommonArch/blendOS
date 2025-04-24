@@ -23,11 +23,14 @@ jobs:
         desktop: [gnome, plasma]
         include:
           - variant: general
-            suffix: ''
+            base_suffix: ''
+            image_suffix: ''
           - variant: nvidia
-            suffix: '-nvidia'
+            base_suffix: '-nvidia'
+            image_suffix: '-nvidia'
           - variant: nvidia-waydroid
-            suffix: '-nvidia'
+            base_suffix: '-nvidia'
+            image_suffix: '-nvidia-waydroid'
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
@@ -37,7 +40,7 @@ jobs:
         run: |
           REPO_OWNER_LOWERCASE="$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')"
           echo "REPO_OWNER_LOWERCASE=$REPO_OWNER_LOWERCASE" >> "$GITHUB_ENV"
-          echo "IMAGE_NAME=ghcr.io/$REPO_OWNER_LOWERCASE/${{ github.event.repository.name }}-${{ matrix.desktop }}-${{ matrix.variant }}" >> "$GITHUB_ENV"
+          echo "IMAGE_NAME=ghcr.io/$REPO_OWNER_LOWERCASE/${{ github.event.repository.name }}-${{ matrix.desktop }}${{ matrix.image_suffix }}" >> "$GITHUB_ENV"
 
       - name: Docker meta
         id: docker_meta
@@ -72,6 +75,6 @@ jobs:
           build-args: |
             CORE_BRANCH=${{ github.ref_name == 'dev' && 'dev' || 'main' }}
             VARIANT=${{ matrix.variant }}
-            SUFFIX=${{ matrix.suffix }}
+            SUFFIX=${{ matrix.base_suffix }}
             DESKTOP=${{ matrix.desktop }}
           provenance: false
