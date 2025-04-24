@@ -15,7 +15,7 @@ cat >>/etc/pacman.conf <<EOT
 
 [breakfast]
 SigLevel = Never
-Server = https://pkg-repo.blendos.co/archive/2025-04-23-23-10-17/
+Server = https://pkg-repo.blendos.co/archive/2025-04-24-15-00-08/
 EOT
 EOF
 
