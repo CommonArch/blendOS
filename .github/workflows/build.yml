@@ -25,6 +25,9 @@ jobs:
           - variant: general
             base_suffix: ''
             image_suffix: ''
+          - variant: waydroid
+            base_suffix: ''
+            image_suffix: '-waydroid'
           - variant: nvidia
             base_suffix: '-nvidia'
             image_suffix: '-nvidia'
